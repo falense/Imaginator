@@ -1,5 +1,6 @@
 import { initToddler } from './toddler.js';
 import { initKids } from './kids.js';
+import { initArtist } from './artist.js';
 import { initGallery } from './gallery.js';
 import { holdAction } from './ui.js';
 
@@ -7,6 +8,7 @@ const views = {
   launcher: {},
   toddler: initToddler(),
   kids: initKids(),
+  artist: initArtist(),
   gallery: initGallery(),
 };
 

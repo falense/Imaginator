@@ -20,6 +20,10 @@
       <span class="card-icon">🌈</span>
       <span>Big artists</span>
     </button>
+    <button class="card" data-view="artist">
+      <span class="card-icon">✨</span>
+      <span>Super artists</span>
+    </button>
     <button class="card" data-view="gallery">
       <span class="card-icon">🖼️</span>
       <span>Gallery</span>
@@ -56,6 +60,38 @@
   <div class="canvas-wrap"><canvas id="kids-canvas"></canvas></div>
   <button class="home-btn" data-home title="Hold to go home">⌂</button>
   <div class="toast" id="kids-toast">⭐</div>
+</section>
+
+<section id="artist" class="view hidden">
+  <div class="rail artist-rail">
+    <div id="artist-swatch" class="swatch" title="Current color"></div>
+    <div class="color-bars">
+      <div id="artist-hue" class="vbar hue-gradient"><div id="artist-hue-thumb" class="vbar-thumb"></div></div>
+      <div id="artist-light" class="vbar"><div id="artist-light-thumb" class="vbar-thumb"></div></div>
+    </div>
+    <div class="sizes">
+      <button class="size-btn" data-size="6"><span class="size-dot" style="width:8px;height:8px"></span></button>
+      <button class="size-btn active" data-size="14"><span class="size-dot" style="width:16px;height:16px"></span></button>
+      <button class="size-btn" data-size="30"><span class="size-dot" style="width:26px;height:26px"></span></button>
+    </div>
+    <div class="tool-grid">
+      <button id="a-brush" class="tool-btn small active" title="Brush">🖌</button>
+      <button id="a-rainbow" class="tool-btn small" title="Rainbow brush">🌈</button>
+      <button id="a-spray" class="tool-btn small" title="Spray">💨</button>
+      <button id="a-stamp" class="tool-btn small" title="Stamps">🦄</button>
+      <button id="a-eraser" class="tool-btn small" title="Eraser">🧽</button>
+      <button id="a-mirror" class="tool-btn small" title="Mirror mode">🦋<span id="a-mirror-badge" class="badge"></span></button>
+      <button id="a-undo" class="tool-btn small" title="Undo">↩</button>
+      <button id="a-redo" class="tool-btn small" title="Redo">↪</button>
+      <button id="a-clear" class="tool-btn small hold-btn" title="Hold to clear">🗑</button>
+    </div>
+  </div>
+  <div class="canvas-wrap">
+    <canvas id="artist-canvas"></canvas>
+    <div id="stamp-panel" class="hidden"></div>
+  </div>
+  <button class="home-btn" data-home title="Hold to go home">⌂</button>
+  <div class="toast" id="artist-toast">⭐</div>
 </section>
 
 <section id="gallery" class="view hidden">

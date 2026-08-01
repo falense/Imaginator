@@ -28,6 +28,7 @@ export function initToddler() {
     clearTimeout(wipTimer);
     wipTimer = setTimeout(async () => {
       if (engine.hasContent()) saveWip('toddler', await engine.toBlob());
+      else clearWip('toddler');
     }, 800);
   };
 

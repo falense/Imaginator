@@ -8,6 +8,7 @@ import { holdAction, toast } from './ui.js';
 
 export function initKids() {
   const engine = new DrawingEngine(document.getElementById('kids-canvas'));
+  const root = document.getElementById('kids');
   engine.color = 'hsl(0 90% 45%)';
 
   let wipTimer = null;
@@ -15,6 +16,7 @@ export function initKids() {
     clearTimeout(wipTimer);
     wipTimer = setTimeout(async () => {
       if (engine.hasContent()) saveWip('kids', await engine.toBlob());
+      else clearWip('kids');
     }, 800);
   };
   engine.onChange = scheduleWipSave;
@@ -40,7 +42,7 @@ export function initKids() {
     const f = Math.min(1, Math.max(0, (e.clientY - r.top) / r.height));
     thumb.style.top = `calc(${f * 100}% - 8px)`;
     setColor(`hsl(${Math.round(f * 360)} 90% 45%)`);
-    document.querySelectorAll('.chip').forEach((c) => c.classList.remove('active'));
+    root.querySelectorAll('.chip').forEach((c) => c.classList.remove('active'));
   }
 
   bar.addEventListener('pointerdown', (e) => {
@@ -54,19 +56,19 @@ export function initKids() {
   }
 
   // Black / white / brown chips.
-  document.querySelectorAll('.chip').forEach((chip) => {
+  root.querySelectorAll('.chip').forEach((chip) => {
     chip.addEventListener('click', () => {
       setColor(chip.dataset.color);
-      document.querySelectorAll('.chip').forEach((c) => c.classList.remove('active'));
+      root.querySelectorAll('.chip').forEach((c) => c.classList.remove('active'));
       chip.classList.add('active');
     });
   });
 
   // Brush sizes.
-  document.querySelectorAll('.size-btn').forEach((btn) => {
+  root.querySelectorAll('.size-btn').forEach((btn) => {
     btn.addEventListener('click', () => {
       engine.size = Number(btn.dataset.size);
-      document.querySelectorAll('.size-btn').forEach((b) => b.classList.remove('active'));
+      root.querySelectorAll('.size-btn').forEach((b) => b.classList.remove('active'));
       btn.classList.add('active');
     });
   });
