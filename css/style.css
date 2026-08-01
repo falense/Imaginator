@@ -255,6 +255,19 @@ canvas {
   font-size: 24px;
 }
 
+#gallery-download-all {
+  margin-left: auto;
+  height: 48px;
+  padding: 0 20px;
+  border: none;
+  border-radius: 12px;
+  background: #f0ebe0;
+  font-size: 18px;
+  color: #4a4a4a;
+}
+
+#gallery-download-all:active { background: #e0d8c8; }
+
 .grid {
   flex: 1;
   overflow-y: auto;
