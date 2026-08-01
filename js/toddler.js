@@ -1,10 +1,11 @@
-// Toddler view: pick a color, draw. Picking a *different* color saves the
+// Toddler view: pick a color, draw. Tapping a *different* color saves the
 // current drawing to the gallery, clears the canvas, and switches color —
-// one drawing per color session, and nothing is ever lost.
+// one drawing per color session, and nothing is ever lost. Press and hold
+// a color to switch without clearing (multi-color drawings).
 
 import { DrawingEngine } from './engine.js';
 import { saveDrawing, saveWip, getWip, clearWip } from './db.js';
-import { toast } from './ui.js';
+import { holdAction, toast } from './ui.js';
 
 const COLORS = [
   '#e53935', // red
@@ -35,9 +36,17 @@ export function initToddler() {
     const btn = document.createElement('button');
     btn.className = 'color-dot' + (i === 0 ? ' active' : '');
     btn.style.background = color;
-    btn.addEventListener('click', () => pick(btn, color));
+    // Tap: save the drawing and start fresh with the new color.
+    // Press and hold: switch color, keep drawing.
+    holdAction(btn, 600, () => select(btn, color), () => pick(btn, color));
     rail.appendChild(btn);
   });
+
+  function select(btn, color) {
+    engine.color = color;
+    rail.querySelectorAll('.color-dot').forEach((d) => d.classList.remove('active'));
+    btn.classList.add('active');
+  }
 
   async function pick(btn, color) {
     if (color === engine.color) return;
@@ -48,9 +57,7 @@ export function initToddler() {
       engine.clear();
       toast('toddler-toast');
     }
-    engine.color = color;
-    rail.querySelectorAll('.color-dot').forEach((d) => d.classList.remove('active'));
-    btn.classList.add('active');
+    select(btn, color);
   }
 
   return {

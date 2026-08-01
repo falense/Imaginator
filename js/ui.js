@@ -1,7 +1,8 @@
 // Hold-to-activate: the button only triggers after being held for
 // `duration` ms. Progress is exposed as the CSS variable --hold (0..1)
-// so the button can render a fill animation.
-export function holdAction(btn, duration, onComplete) {
+// so the button can render a fill animation. If `onTap` is given,
+// releasing before the hold completes fires it instead.
+export function holdAction(btn, duration, onComplete, onTap) {
   let timer = null;
   let raf = null;
   let t0 = 0;
@@ -30,7 +31,12 @@ export function holdAction(btn, duration, onComplete) {
     tick();
   });
 
-  for (const type of ['pointerup', 'pointercancel', 'pointerleave']) {
+  btn.addEventListener('pointerup', () => {
+    const wasPending = timer !== null;
+    cancel();
+    if (wasPending && onTap) onTap();
+  });
+  for (const type of ['pointercancel', 'pointerleave']) {
     btn.addEventListener(type, cancel);
   }
 }
