@@ -1,0 +1,305 @@
+* { box-sizing: border-box; margin: 0; padding: 0; }
+
+html, body {
+  height: 100%;
+  overflow: hidden;
+  overscroll-behavior: none;
+  font-family: system-ui, -apple-system, "Segoe UI", sans-serif;
+  user-select: none;
+  -webkit-user-select: none;
+  touch-action: manipulation;
+}
+
+button { cursor: pointer; font-family: inherit; }
+
+.view { position: fixed; inset: 0; display: flex; }
+.hidden { display: none !important; }
+
+/* ---------- Launcher ---------- */
+
+#launcher {
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 48px;
+  background: linear-gradient(160deg, #fff8e1 0%, #ffe0f0 50%, #e0f4ff 100%);
+}
+
+#launcher h1 { font-size: 3rem; color: #4a4a4a; }
+
+.cards { display: flex; gap: 32px; flex-wrap: wrap; justify-content: center; }
+
+.card {
+  width: 220px;
+  height: 220px;
+  border: none;
+  border-radius: 28px;
+  background: #ffffff;
+  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.12);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 16px;
+  font-size: 1.4rem;
+  color: #4a4a4a;
+  transition: transform 0.15s ease;
+}
+
+.card:active { transform: scale(0.95); }
+.card-icon { font-size: 72px; }
+
+#fullscreen-btn {
+  position: fixed;
+  bottom: 16px;
+  right: 16px;
+  width: 48px;
+  height: 48px;
+  border: none;
+  border-radius: 12px;
+  background: rgba(255, 255, 255, 0.7);
+  font-size: 22px;
+  color: #666;
+}
+
+/* ---------- Drawing views ---------- */
+
+.rail {
+  width: 100px;
+  flex-shrink: 0;
+  background: #f3ede2;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 14px;
+  padding: 14px 0;
+  overflow-y: auto;
+  box-shadow: 2px 0 8px rgba(0, 0, 0, 0.08);
+  z-index: 2;
+}
+
+.canvas-wrap { flex: 1; position: relative; background: #ffffff; }
+
+canvas {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  touch-action: none;
+}
+
+.color-dot {
+  width: 64px;
+  height: 64px;
+  flex-shrink: 0;
+  border-radius: 50%;
+  border: 4px solid rgba(0, 0, 0, 0.1);
+  transition: transform 0.15s ease, border-color 0.15s ease;
+}
+
+.color-dot.active {
+  border-color: #333;
+  transform: scale(1.15);
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.3);
+}
+
+/* Home button: deliberately small and dull; requires a long hold */
+.home-btn {
+  position: fixed;
+  top: 10px;
+  right: 10px;
+  width: 44px;
+  height: 44px;
+  border: none;
+  border-radius: 50%;
+  font-size: 20px;
+  color: #555;
+  opacity: 0.35;
+  background: linear-gradient(
+    to top,
+    #ffb74d calc(var(--hold, 0) * 100%),
+    #e0e0e0 calc(var(--hold, 0) * 100%)
+  );
+}
+
+/* ---------- Kids (4–6) rail ---------- */
+
+.kids-rail { gap: 12px; }
+
+#kids-swatch {
+  width: 52px;
+  height: 52px;
+  flex-shrink: 0;
+  border-radius: 50%;
+  border: 3px solid #ffffff;
+  box-shadow: 0 1px 6px rgba(0, 0, 0, 0.3);
+  background: hsl(0 90% 45%);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 24px;
+}
+
+#hue-bar {
+  width: 56px;
+  flex: 1;
+  min-height: 160px;
+  border-radius: 28px;
+  position: relative;
+  touch-action: none;
+  background: linear-gradient(to bottom, #f00, #ff0, #0f0, #0ff, #00f, #f0f, #f00);
+  box-shadow: inset 0 0 4px rgba(0, 0, 0, 0.3);
+}
+
+#hue-thumb {
+  position: absolute;
+  left: -5px;
+  right: -5px;
+  top: 0;
+  height: 16px;
+  border: 3px solid #ffffff;
+  border-radius: 9px;
+  box-shadow: 0 1px 5px rgba(0, 0, 0, 0.4);
+  pointer-events: none;
+}
+
+.chips { display: flex; gap: 6px; }
+
+.chip {
+  width: 26px;
+  height: 26px;
+  border-radius: 50%;
+  border: 2px solid #bbb;
+}
+
+.chip.active { border-color: #333; transform: scale(1.15); }
+
+.sizes { display: flex; gap: 5px; align-items: center; }
+
+.size-btn {
+  width: 28px;
+  height: 40px;
+  border: 2px solid transparent;
+  border-radius: 10px;
+  background: #ffffff;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.size-btn.active { border-color: #333; }
+.size-dot { border-radius: 50%; background: #444; display: block; }
+
+.tool-btn {
+  width: 60px;
+  height: 54px;
+  flex-shrink: 0;
+  border: none;
+  border-radius: 14px;
+  background: #ffffff;
+  font-size: 26px;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.12);
+}
+
+.tool-btn.active { outline: 3px solid #333; }
+
+.hold-btn {
+  background: linear-gradient(
+    to top,
+    #ef5350 calc(var(--hold, 0) * 100%),
+    #ffffff calc(var(--hold, 0) * 100%)
+  );
+}
+
+/* ---------- Toast (saved star) ---------- */
+
+.toast {
+  position: fixed;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 140px;
+  pointer-events: none;
+  opacity: 0;
+}
+
+.toast.show { animation: toast-pop 0.9s ease; }
+
+@keyframes toast-pop {
+  0%   { opacity: 0; transform: scale(0.3); }
+  30%  { opacity: 1; transform: scale(1.15); }
+  70%  { opacity: 1; transform: scale(1); }
+  100% { opacity: 0; transform: scale(1.4); }
+}
+
+/* ---------- Gallery ---------- */
+
+#gallery { flex-direction: column; background: #faf7f2; }
+
+.gallery-header {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  padding: 14px 20px;
+  background: #ffffff;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+}
+
+#gallery-back {
+  width: 48px;
+  height: 48px;
+  border: none;
+  border-radius: 12px;
+  background: #f0ebe0;
+  font-size: 24px;
+}
+
+.grid {
+  flex: 1;
+  overflow-y: auto;
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+  gap: 20px;
+  padding: 20px;
+  align-content: start;
+}
+
+.g-card {
+  background: #ffffff;
+  border-radius: 16px;
+  box-shadow: 0 3px 10px rgba(0, 0, 0, 0.1);
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+}
+
+.g-card img {
+  width: 100%;
+  aspect-ratio: 4 / 3;
+  object-fit: cover;
+  background: #ffffff;
+  border-bottom: 1px solid #eee;
+}
+
+.g-actions { display: flex; }
+
+.g-actions button {
+  flex: 1;
+  border: none;
+  background: none;
+  font-size: 22px;
+  padding: 10px 0;
+}
+
+.g-actions button:active { background: #f0f0f0; }
+
+#gallery-empty {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.5rem;
+  color: #999;
+}
