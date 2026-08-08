@@ -69,6 +69,22 @@ export function initPhysics() {
     moved[i] = moved[j] = 1;
   }
 
+  // Slide a water grain up to 6 cells along the sideways axis, stopping
+  // early at an edge it can fall over. Returns the target index or -1.
+  function slide(x, y, dir, gx, gy, pxv, pyv) {
+    let tx = x, ty = y, j = -1;
+    for (let k = 0; k < 6; k++) {
+      tx += dir * pxv;
+      ty += dir * pyv;
+      const t = idx(tx, ty);
+      if (t === -1 || cells[t] !== EMPTY) break;
+      j = t;
+      const bt = idx(tx + gx, ty + gy);
+      if (bt !== -1 && cells[bt] === EMPTY) break;
+    }
+    return j;
+  }
+
   // ---------- Grid sizing / persistence helpers ----------
 
   // Copy another grid into ours anchored top-left (resize keeps the world).
@@ -145,11 +161,16 @@ export function initPhysics() {
           const d2 = idx(x + gx - s * pxv, y + gy - s * pyv);
           if (d1 !== -1 && cells[d1] === EMPTY) { swap(i, d1); continue; }
           if (d2 !== -1 && cells[d2] === EMPTY) { swap(i, d2); continue; }
-          // Flow sideways, committing to one direction until blocked.
+          // Flow sideways: prefer the committed direction, else the other.
+          // Dispersing several cells per tick levels pools and closes the
+          // one-cell gaps that otherwise freeze into comb/string artifacts.
           const bDir = data[i] & 4 ? 1 : -1;
-          const sd = idx(x + bDir * pxv, y + bDir * pyv);
-          if (sd !== -1 && cells[sd] === EMPTY) swap(i, sd);
-          else data[i] ^= 4;
+          let j = slide(x, y, bDir, gx, gy, pxv, pyv);
+          if (j === -1) {
+            j = slide(x, y, -bDir, gx, gy, pxv, pyv);
+            if (j !== -1) data[i] ^= 4; // committed direction is dry: turn around
+          }
+          if (j !== -1) swap(i, j);
           continue;
         }
 
@@ -188,21 +209,23 @@ export function initPhysics() {
 
         if (el === PLANT) {
           // Drink neighboring water and sprout a new shoot away from
-          // gravity, so watered plants branch up and outwards.
+          // gravity, so watered plants branch up and outwards. Shoots may
+          // grow through water too — stems climb up out of ponds.
           for (let k = 0; k < 4; k++) {
             const n = nbuf[k];
-            if (n !== -1 && cells[n] === WATER && Math.random() < 0.06) {
+            if (n !== -1 && cells[n] === WATER && Math.random() < 0.12) {
               cells[n] = EMPTY; data[n] = 0; moved[n] = 1;
-              const s = Math.random() < 0.5 ? 1 : -1;
-              const r = Math.random();
-              let tx, ty;
-              if (r < 0.5) { tx = x - gx; ty = y - gy; } // straight up
-              else if (r < 0.85) { tx = x - gx + s * pxv; ty = y - gy + s * pyv; } // diagonal
-              else { tx = x + s * pxv; ty = y + s * pyv; } // sideways
-              const t = idx(tx, ty);
-              if (t !== -1 && cells[t] === EMPTY) {
+              const grow = (tx, ty) => {
+                const t = idx(tx, ty);
+                if (t === -1 || (cells[t] !== EMPTY && cells[t] !== WATER)) return false;
                 cells[t] = PLANT; data[t] = shade(); moved[t] = 1;
-              }
+                return true;
+              };
+              const s = Math.random() < 0.5 ? 1 : -1;
+              grow(x - gx, y - gy) || // straight up first,
+                grow(x - gx + s * pxv, y - gy + s * pyv) || // then the diagonals,
+                grow(x - gx - s * pxv, y - gy - s * pyv) ||
+                grow(x + s * pxv, y + s * pyv); // then sideways
             }
           }
           continue;
@@ -251,7 +274,9 @@ export function initPhysics() {
         if (!inBounds(x, y)) continue;
         const i = y * cols + x;
         cells[i] = element;
-        data[i] = element === FIRE ? fireLife() : shade();
+        // Bit 2 randomizes water's initial flow direction so a fresh pour
+        // doesn't drift one way in lockstep.
+        data[i] = element === FIRE ? fireLife() : shade() | (Math.random() < 0.5 ? 4 : 0);
         moved[i] = 1;
       }
     }
