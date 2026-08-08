@@ -24,6 +24,10 @@
       <span class="card-icon">✨</span>
       <span>Super artists</span>
     </button>
+    <button class="card" data-view="physics">
+      <span class="card-icon">🌋</span>
+      <span>Magic sand</span>
+    </button>
     <button class="card" data-view="gallery">
       <span class="card-icon">🖼️</span>
       <span>Gallery</span>
@@ -92,6 +96,34 @@
   </div>
   <button class="home-btn" data-home title="Hold to go home">⌂</button>
   <div class="toast" id="artist-toast">⭐</div>
+</section>
+
+<section id="physics" class="view hidden">
+  <div class="rail physics-rail">
+    <div class="tool-grid">
+      <button class="tool-btn small active" data-element="2" title="Sand">⏳</button>
+      <button class="tool-btn small" data-element="3" title="Water">💧</button>
+      <button class="tool-btn small" data-element="1" title="Wall">🧱</button>
+      <button class="tool-btn small" data-element="5" title="Plant">🌱</button>
+      <button class="tool-btn small" data-element="4" title="Fire">🔥</button>
+      <button class="tool-btn small" data-element="6" title="Smoke">💨</button>
+      <button class="tool-btn small" data-element="0" title="Eraser">🧽</button>
+      <button id="physics-pause" class="tool-btn small" title="Pause">⏸</button>
+    </div>
+    <div class="sizes">
+      <button class="size-btn" data-radius="2"><span class="size-dot" style="width:8px;height:8px"></span></button>
+      <button class="size-btn active" data-radius="4"><span class="size-dot" style="width:16px;height:16px"></span></button>
+      <button class="size-btn" data-radius="8"><span class="size-dot" style="width:26px;height:26px"></span></button>
+    </div>
+    <button id="physics-snap" class="tool-btn" title="Save a photo">📸</button>
+    <button id="physics-clear" class="tool-btn hold-btn" title="Hold to clear">🗑</button>
+  </div>
+  <div class="canvas-wrap">
+    <canvas id="physics-canvas"></canvas>
+    <button id="physics-gravity" class="gravity-btn" title="Change gravity">⬇</button>
+  </div>
+  <button class="home-btn" data-home title="Hold to go home">⌂</button>
+  <div class="toast" id="physics-toast">⭐</div>
 </section>
 
 <section id="gallery" class="view hidden">

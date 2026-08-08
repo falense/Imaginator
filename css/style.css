@@ -303,6 +303,28 @@ canvas {
   background: #ffffff;
 }
 
+/* ---------- Physics (falling sand) ---------- */
+
+.physics-rail { width: 128px; gap: 10px; }
+
+/* The backing canvas is grid-resolution; CSS upscales it, so keep it chunky. */
+#physics-canvas { image-rendering: pixelated; }
+
+.gravity-btn {
+  position: absolute;
+  right: 14px;
+  bottom: 14px;
+  width: 64px;
+  height: 64px;
+  border: none;
+  border-radius: 50%;
+  background: #ffffff;
+  font-size: 30px;
+  box-shadow: 0 3px 10px rgba(0, 0, 0, 0.2);
+  transition: transform 0.3s ease;
+  z-index: 3;
+}
+
 /* ---------- Toast (saved star) ---------- */
 
 .toast {
