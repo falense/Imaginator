@@ -4,7 +4,7 @@
 
 import { DrawingEngine } from './engine.js';
 import { saveDrawing, saveWip, getWip, clearWip } from './db.js';
-import { holdAction, toast } from './ui.js';
+import { holdAction, toast, hueSlider } from './ui.js';
 
 export function initKids() {
   const engine = new DrawingEngine(document.getElementById('kids-canvas'));
@@ -32,28 +32,14 @@ export function initKids() {
     swatch.textContent = '';
   }
 
-  // Hue slider (custom-built so it stays big and touch-friendly).
-  const bar = document.getElementById('hue-bar');
-  const thumb = document.getElementById('hue-thumb');
-  let draggingHue = false;
-
-  function hueFromEvent(e) {
-    const r = bar.getBoundingClientRect();
-    const f = Math.min(1, Math.max(0, (e.clientY - r.top) / r.height));
-    thumb.style.top = `calc(${f * 100}% - 8px)`;
-    setColor(`hsl(${Math.round(f * 360)} 90% 45%)`);
-    root.querySelectorAll('.chip').forEach((c) => c.classList.remove('active'));
-  }
-
-  bar.addEventListener('pointerdown', (e) => {
-    draggingHue = true;
-    try { bar.setPointerCapture(e.pointerId); } catch { /* ignore */ }
-    hueFromEvent(e);
-  });
-  bar.addEventListener('pointermove', (e) => { if (draggingHue) hueFromEvent(e); });
-  for (const type of ['pointerup', 'pointercancel']) {
-    bar.addEventListener(type, () => { draggingHue = false; });
-  }
+  hueSlider(
+    document.getElementById('hue-bar'),
+    document.getElementById('hue-thumb'),
+    (color) => {
+      setColor(color);
+      root.querySelectorAll('.chip').forEach((c) => c.classList.remove('active'));
+    }
+  );
 
   // Black / white / brown chips.
   root.querySelectorAll('.chip').forEach((chip) => {

@@ -143,7 +143,7 @@ canvas {
   font-size: 24px;
 }
 
-#hue-bar {
+.hue-bar {
   width: 56px;
   flex: 1;
   min-height: 160px;
@@ -154,7 +154,7 @@ canvas {
   box-shadow: inset 0 0 4px rgba(0, 0, 0, 0.3);
 }
 
-#hue-thumb {
+.hue-thumb {
   position: absolute;
   left: -5px;
   right: -5px;
@@ -324,6 +324,40 @@ canvas {
   transition: transform 0.3s ease;
   z-index: 3;
 }
+
+/* ---------- Coloring book ---------- */
+
+/* Line art sits above the canvas; multiply lets the white page vanish so
+   strokes below show through, and the outlines can never be painted over. */
+#coloring-art {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  mix-blend-mode: multiply;
+  pointer-events: none;
+  z-index: 2;
+}
+
+.pic-btn {
+  position: absolute;
+  bottom: 14px;
+  width: 64px;
+  height: 64px;
+  border: none;
+  border-radius: 50%;
+  background: #ffffff;
+  font-size: 26px;
+  color: #4a4a4a;
+  box-shadow: 0 3px 10px rgba(0, 0, 0, 0.2);
+  z-index: 3;
+}
+
+.pic-btn:active { transform: scale(0.92); }
+
+#coloring-prev { left: 14px; }
+#coloring-next { right: 14px; }
 
 /* ---------- Toast (saved star) ---------- */
 

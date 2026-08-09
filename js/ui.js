@@ -41,6 +41,29 @@ export function holdAction(btn, duration, onComplete, onTap) {
   }
 }
 
+// Vertical hue slider (custom-built so it stays big and touch-friendly).
+// Calls onColor with an hsl() string while dragging.
+export function hueSlider(bar, thumb, onColor) {
+  let dragging = false;
+
+  function fromEvent(e) {
+    const r = bar.getBoundingClientRect();
+    const f = Math.min(1, Math.max(0, (e.clientY - r.top) / r.height));
+    thumb.style.top = `calc(${f * 100}% - 8px)`;
+    onColor(`hsl(${Math.round(f * 360)} 90% 45%)`);
+  }
+
+  bar.addEventListener('pointerdown', (e) => {
+    dragging = true;
+    try { bar.setPointerCapture(e.pointerId); } catch { /* ignore */ }
+    fromEvent(e);
+  });
+  bar.addEventListener('pointermove', (e) => { if (dragging) fromEvent(e); });
+  for (const type of ['pointerup', 'pointercancel']) {
+    bar.addEventListener(type, () => { dragging = false; });
+  }
+}
+
 // Quick full-screen star pop as "your drawing was saved" feedback.
 export function toast(id) {
   const el = document.getElementById(id);

@@ -2,6 +2,7 @@ import { initToddler } from './toddler.js';
 import { initKids } from './kids.js';
 import { initArtist } from './artist.js';
 import { initPhysics } from './physics.js';
+import { initColoring } from './coloring.js';
 import { initGallery } from './gallery.js';
 import { holdAction } from './ui.js';
 
@@ -11,6 +12,7 @@ const views = {
   kids: initKids(),
   artist: initArtist(),
   physics: initPhysics(),
+  coloring: initColoring(),
   gallery: initGallery(),
 };
 
