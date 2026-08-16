@@ -11,6 +11,12 @@ const STAMPS = [
   '🚀', '🐟', '🐸', '🍎', '🎈', '👑', '⚽', '🍦', '🐢', '🔥',
 ];
 
+const SHAPES = [
+  ['circle', '●'], ['square', '■'], ['triangle', '▲'], ['diamond', '◆'],
+  ['pentagon', '⬟'], ['star', '★'], ['heart', '♥'], ['crescent', '☾'],
+  ['bolt', '⚡'], ['arrow', '⬆'],
+];
+
 const MIRROR_STATES = [1, 2, 4];
 
 export function initArtist() {
@@ -30,6 +36,7 @@ export function initArtist() {
 
   const swatch = document.getElementById('artist-swatch');
   const stampPanel = document.getElementById('stamp-panel');
+  const shapePanel = document.getElementById('shape-panel');
   const mirrorBadge = document.getElementById('a-mirror-badge');
   const lightBar = document.getElementById('artist-light');
 
@@ -38,6 +45,7 @@ export function initArtist() {
     rainbow: document.getElementById('a-rainbow'),
     spray: document.getElementById('a-spray'),
     stamp: document.getElementById('a-stamp'),
+    shape: document.getElementById('a-shape'),
     eraser: document.getElementById('a-eraser'),
   };
 
@@ -49,6 +57,9 @@ export function initArtist() {
     } else if (engine.tool === 'stamp') {
       swatch.style.background = '#ffffff';
       swatch.textContent = engine.stampEmoji;
+    } else if (engine.tool === 'shape') {
+      swatch.style.background = engine.color;
+      swatch.textContent = SHAPES.find(([id]) => id === engine.shapeKind)[1];
     } else if (engine.tool === 'rainbow') {
       swatch.style.background =
         'linear-gradient(45deg, #f00, #ff0, #0f0, #0ff, #00f, #f0f)';
@@ -72,6 +83,7 @@ export function initArtist() {
       btn.classList.toggle('active', key === name);
     }
     stampPanel.classList.toggle('hidden', name !== 'stamp');
+    shapePanel.classList.toggle('hidden', name !== 'shape');
     updateSwatch();
   }
 
@@ -122,6 +134,21 @@ export function initArtist() {
     stampPanel.appendChild(btn);
   });
   engine.stampEmoji = STAMPS[0];
+
+  // Shape picker.
+  SHAPES.forEach(([id, glyph], i) => {
+    const btn = document.createElement('button');
+    btn.textContent = glyph;
+    if (i === 0) btn.classList.add('active');
+    btn.addEventListener('click', () => {
+      engine.shapeKind = id;
+      shapePanel.querySelectorAll('button').forEach((b) => b.classList.remove('active'));
+      btn.classList.add('active');
+      updateSwatch();
+    });
+    shapePanel.appendChild(btn);
+  });
+  engine.shapeKind = SHAPES[0][0];
 
   // Mirror mode cycles off -> 2 -> 4.
   const mirrorBtn = document.getElementById('a-mirror');

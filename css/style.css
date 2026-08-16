@@ -274,7 +274,8 @@ canvas {
   color: #333;
 }
 
-#stamp-panel {
+#stamp-panel,
+#shape-panel {
   position: absolute;
   top: 10px;
   left: 10px;
@@ -289,7 +290,8 @@ canvas {
   z-index: 3;
 }
 
-#stamp-panel button {
+#stamp-panel button,
+#shape-panel button {
   width: 52px;
   height: 52px;
   font-size: 30px;
@@ -298,7 +300,8 @@ canvas {
   background: none;
 }
 
-#stamp-panel button.active {
+#stamp-panel button.active,
+#shape-panel button.active {
   border-color: #333;
   background: #ffffff;
 }
